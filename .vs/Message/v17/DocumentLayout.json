@@ -1,0 +1,107 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Raed\\source\\repos\\Message\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|c:\\users\\raed\\source\\repos\\message\\message\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|solutionrelative:message\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|c:\\users\\raed\\source\\repos\\message\\message\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|solutionrelative:message\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|c:\\users\\raed\\source\\repos\\message\\message\\controllers\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|solutionrelative:message\\controllers\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|c:\\users\\raed\\source\\repos\\message\\message\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|solutionrelative:message\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|c:\\users\\raed\\source\\repos\\message\\message\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8FCE64E3-2A2C-4DE5-A700-522769C7FD7F}|Message\\Message.csproj|solutionrelative:message\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Message\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Message\\Controllers\\AuthController.cs",
+              "ViewState": "AQIAACwAAAAAAAAAAAAAAEcAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T19:13:20.526Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Controllers\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Message\\Controllers\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Controllers\\AppDbContext.cs",
+              "RelativeToolTip": "Message\\Controllers\\AppDbContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T20:27:05.845Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\appsettings.json",
+              "RelativeDocumentMoniker": "Message\\appsettings.json",
+              "ToolTip": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\appsettings.json",
+              "RelativeToolTip": "Message\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAB0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-09T20:18:58.253Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Message\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Models\\User.cs",
+              "RelativeToolTip": "Message\\Models\\User.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T19:35:42.4Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Program.cs",
+              "RelativeDocumentMoniker": "Message\\Program.cs",
+              "ToolTip": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Program.cs",
+              "RelativeToolTip": "Message\\Program.cs",
+              "ViewState": "AQIAABkAAAAAAAAAAAAAAEMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-09T19:28:16.528Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
