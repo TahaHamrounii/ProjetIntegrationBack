@@ -1,0 +1,11 @@
+.vs/
+.idea/
+*.suo
+*.user
+/node_modules/
+/dist/
+/build/
+*.log
+Thumbs.db
+.DS_Store
+.env
