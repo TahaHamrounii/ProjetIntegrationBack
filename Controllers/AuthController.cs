@@ -1,5 +1,4 @@
-﻿using JwtWebApiDotNet7.Controllers;
-using Message.Models;
+﻿using Message.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore; // Ensure this is included for EF Core methods
@@ -8,7 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using BCrypt.Net; // Ensure you have this package installed for password hashing
+using BCrypt.Net;
+using Message.Data; // Ensure you have this package installed for password hashing
 
 namespace Message.Controllers
 {

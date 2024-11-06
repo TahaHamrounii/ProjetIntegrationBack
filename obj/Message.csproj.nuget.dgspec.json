@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Message.csproj": {}
+    "C:\\Users\\tahah\\Desktop\\real\\ProjetIntegrationBack\\Message.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Message.csproj": {
+    "C:\\Users\\tahah\\Desktop\\real\\ProjetIntegrationBack\\Message.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Message.csproj",
+        "projectUniqueName": "C:\\Users\\tahah\\Desktop\\real\\ProjetIntegrationBack\\Message.csproj",
         "projectName": "Message",
-        "projectPath": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\Message.csproj",
-        "packagesPath": "C:\\Users\\Raed\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Raed\\source\\repos\\Message\\Message\\obj\\",
+        "projectPath": "C:\\Users\\tahah\\Desktop\\real\\ProjetIntegrationBack\\Message.csproj",
+        "packagesPath": "C:\\Users\\tahah\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\tahah\\Desktop\\real\\ProjetIntegrationBack\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Raed\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\tahah\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -49,6 +54,10 @@
               "target": "Package",
               "version": "[4.0.3, )"
             },
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.5.1, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.10, )"
@@ -56,6 +65,10 @@
             "Microsoft.AspNetCore.Cors": {
               "target": "Package",
               "version": "[2.2.0, )"
+            },
+            "Microsoft.Data.Sqlite": {
+              "target": "Package",
+              "version": "[8.0.10, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -65,11 +78,23 @@
               "target": "Package",
               "version": "[8.0.10, )"
             },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.10, )"
+            },
+            "SQLitePCLRaw.bundle_e_sqlite3": {
+              "target": "Package",
+              "version": "[2.1.10, )"
+            },
+            "SQLitePCLRaw.core": {
+              "target": "Package",
+              "version": "[2.1.10, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -99,7 +124,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
