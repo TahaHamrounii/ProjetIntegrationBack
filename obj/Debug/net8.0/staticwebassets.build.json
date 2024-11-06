@@ -1,8 +1,14 @@
 {
   "Version": 1,
+<<<<<<< HEAD
   "Hash": "lAVsf4/XP8OL4a3UKcpKodesbBfBaGYqErDYy8hI7Xs=",
   "Source": "WebApi",
   "BasePath": "_content/WebApi",
+=======
+  "Hash": "O76fjLLOK05ou8Fq5NkzQPEzWqoDNbM2KYnhRJf9xiI=",
+  "Source": "Message",
+  "BasePath": "_content/Message",
+>>>>>>> raed
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
