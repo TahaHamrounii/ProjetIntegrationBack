@@ -44,7 +44,7 @@ namespace Message.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Mail);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Email);
 
             // Verify the password (using hashed passwords)
             if (existingUser == null || !BCrypt.Net.BCrypt.Verify(loginRequest.Password, existingUser.Password))
@@ -71,7 +71,7 @@ namespace Message.Controllers
     }
     public class LoginRequest
     {
-        public string Mail { get; set; } // Corresponds to the email
+        public string Email { get; set; } // Corresponds to the email
         public string Password { get; set; } // Password field
     }
 
