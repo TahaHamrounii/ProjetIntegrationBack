@@ -9,6 +9,8 @@ namespace Message.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Messages> Messages { get; set; }
+        public DbSet<Friend> Friends { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,5 +20,6 @@ namespace Message.Data
 
             base.OnModelCreating(modelBuilder);
         }
+        
     }
 }

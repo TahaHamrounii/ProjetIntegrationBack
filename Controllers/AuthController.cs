@@ -74,13 +74,19 @@ namespace Message.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                    
-                    new Claim(ClaimTypes.Name, existingUser.Username)
+                    new Claim(ClaimTypes.Name, existingUser.Username),
+                      new Claim(ClaimTypes.NameIdentifier, existingUser.Id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return Ok(new { Token = tokenHandler.WriteToken(token) });
+            return Ok(new { Token = tokenHandler.WriteToken(token),
+
+
+             UserId = existingUser.Id
+
+            });
         }
 
         [HttpGet("users")]

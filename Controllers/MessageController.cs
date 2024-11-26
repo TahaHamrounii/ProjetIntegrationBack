@@ -129,6 +129,28 @@ namespace Message.Controllers
             return Ok(new { Status = "Message sent successfully" });
         }
 
+        //this for searching all users 
+        [HttpGet("searchFriend")]
+        public async Task<IActionResult> SearchUsers([FromQuery] string query)
+        {
+            if (string.IsNullOrEmpty(query))
+                return BadRequest("Search query cannot be empty.");
+
+            // Search users by name or email (case-insensitive)
+            var users = await _context.Users
+                .Where(u => u.Username.Contains(query) || u.Email.Contains(query))
+                .Select(u => new
+                {
+                    u.Id,
+                    u.Username,
+                    u.Email,
+                    u.Status // Optional fields for the user
+                })
+                .ToListAsync();
+
+            return Ok(users);
+        }
+
     }
 
 

@@ -5,6 +5,7 @@ using System.Text;
 using Message.Data;
 using Message.Models;
 using System.IdentityModel.Tokens.Jwt;
+using Message.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 SQLitePCL.Batteries_V2.Init();
@@ -40,7 +41,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Your_Secret_Key")) // Replace with your secret key
     };
 });
-
+builder.Services.AddScoped<FriendService>();
 // Add controllers and other configurations
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -62,6 +63,7 @@ app.UseAuthorization();
 
 // Enable WebSockets
 app.UseWebSockets();
+
 
 // WebSocket middleware to handle incoming WebSocket connections
 app.Use(async (context, next) =>
