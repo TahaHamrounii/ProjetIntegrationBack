@@ -1,43 +1,6 @@
 [
   {
     "ContainingType": "Message.Controllers.AuthController",
-    "Method": "CreateGroup",
-    "RelativePath": "api/Auth/creategroup/{token}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "groupDto",
-        "Type": "Message.Controllers.AuthController\u002BCreateGroupDto",
-        "IsRequired": true
-      },
-      {
-        "Name": "token",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Message.Controllers.AuthController",
-    "Method": "GetAllGroups",
-    "RelativePath": "api/Auth/groups/{token}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "token",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Message.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
     "HttpMethod": "POST",
@@ -46,7 +9,7 @@
     "Parameters": [
       {
         "Name": "loginRequest",
-        "Type": "Message.Controllers.LoginRequest",
+        "Type": "Message.Controllers.AuthController\u002BLoginRequest",
         "IsRequired": true
       }
     ],
@@ -105,6 +68,179 @@
       {
         "Name": "request",
         "Type": "Message.Controllers.AddFriendRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Message.Controllers.GroupController",
+    "Method": "AddMembers",
+    "RelativePath": "api/Group/addmembers/{token}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "addMembersDto",
+        "Type": "Message.Controllers.GroupController\u002BAddMembersDto",
+        "IsRequired": true
+      },
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Message.Controllers.GroupController",
+    "Method": "CreateGroup",
+    "RelativePath": "api/Group/create/{token}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupDto",
+        "Type": "Message.Controllers.GroupController\u002BCreateGroupDto",
+        "IsRequired": true
+      },
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Message.Controllers.GroupController",
+    "Method": "CreateGroupWithFriends",
+    "RelativePath": "api/Group/createwithfriends/{token}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupDto",
+        "Type": "Message.Controllers.GroupController\u002BCreateGroupWithFriendsDto",
+        "IsRequired": true
+      },
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Message.Controllers.GroupController",
+    "Method": "DeleteGroup",
+    "RelativePath": "api/Group/delete/{groupId}/{token}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Message.Controllers.GroupController",
+    "Method": "LeaveGroup",
+    "RelativePath": "api/Group/leave/{groupId}/{token}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Message.Controllers.GroupController",
+    "Method": "GetUserGroups",
+    "RelativePath": "api/Group/list/{token}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Message.Controllers.GroupController",
+    "Method": "MakeAdmin",
+    "RelativePath": "api/Group/makeadmin/{groupId}/{memberId}/{token}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "memberId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Message.Controllers.GroupController",
+    "Method": "UpdateGroup",
+    "RelativePath": "api/Group/update/{groupId}/{token}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateDto",
+        "Type": "Message.Controllers.GroupController\u002BUpdateGroupDto",
+        "IsRequired": true
+      },
+      {
+        "Name": "token",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
