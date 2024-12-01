@@ -42,6 +42,12 @@ namespace Message.Controllers
             public string Description { get; set; }
         }
 
+        public class SendGroupMessageDto
+        {
+            public int GroupId { get; set; }
+            public string Content { get; set; }
+        }
+
         private async Task<int?> ValidateTokenAndGetUserId(string token)
         {
             if (string.IsNullOrEmpty(token))
@@ -296,6 +302,104 @@ namespace Message.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { Message = "User promoted to admin successfully" });
+        }
+
+        [HttpPost("message/send/{token}")]
+        public async Task<IActionResult> SendMessage([FromBody] SendGroupMessageDto messageDto, string token)
+        {
+            var userId = await ValidateTokenAndGetUserId(token);
+            if (!userId.HasValue)
+                return Unauthorized("Invalid token");
+
+            // Check if user is a member of the group
+            var isMember = await _context.UserGroups
+                .AnyAsync(ug => ug.GroupId == messageDto.GroupId && ug.UserId == userId.Value);
+
+            if (!isMember)
+                return Forbid("You must be a member of the group to send messages");
+
+            var message = new GroupMessage
+            {
+                GroupId = messageDto.GroupId,
+                SenderId = userId.Value,
+                Content = messageDto.Content,
+                SentAt = DateTime.Now
+            };
+
+            _context.GroupMessages.Add(message);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { 
+                MessageId = message.MessageId,
+                SentAt = message.SentAt
+            });
+        }
+
+        [HttpGet("messages/{groupId}/{token}")]
+        public async Task<IActionResult> GetGroupMessages(int groupId, string token, [FromQuery] DateTime? since = null)
+        {
+            var userId = await ValidateTokenAndGetUserId(token);
+            if (!userId.HasValue)
+                return Unauthorized("Invalid token");
+
+            // Check if user is a member of the group
+            var isMember = await _context.UserGroups
+                .AnyAsync(ug => ug.GroupId == groupId && ug.UserId == userId.Value);
+
+            if (!isMember)
+                return Forbid("You must be a member of the group to view messages");
+
+            var query = _context.GroupMessages
+                .Where(m => m.GroupId == groupId);
+
+            // If since parameter is provided, only get messages after that date
+            if (since.HasValue)
+            {
+                query = query.Where(m => m.SentAt > since.Value);
+            }
+
+            var messages = await query
+                .OrderByDescending(m => m.SentAt)
+                .Select(m => new
+                {
+                    m.MessageId,
+                    m.Content,
+                    m.SentAt,
+                    Sender = new
+                    {
+                        m.SenderId,
+                        m.Sender.Username
+                    }
+                })
+                .ToListAsync();
+
+            return Ok(messages);
+        }
+
+        [HttpDelete("message/{messageId}/{token}")]
+        public async Task<IActionResult> DeleteMessage(int messageId, string token)
+        {
+            var userId = await ValidateTokenAndGetUserId(token);
+            if (!userId.HasValue)
+                return Unauthorized("Invalid token");
+
+            var message = await _context.GroupMessages
+                .FirstOrDefaultAsync(m => m.MessageId == messageId);
+
+            if (message == null)
+                return NotFound("Message not found");
+
+            // Check if user is the sender or a group admin
+            var isAdmin = await _context.UserGroups
+                .AnyAsync(ug => ug.GroupId == message.GroupId && ug.UserId == userId.Value && ug.IsAdmin);
+
+            if (message.SenderId != userId.Value && !isAdmin)
+                return Forbid("You can only delete your own messages or any message if you're an admin");
+
+            _context.GroupMessages.Remove(message);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Message deleted successfully" });
         }
     }
 }
