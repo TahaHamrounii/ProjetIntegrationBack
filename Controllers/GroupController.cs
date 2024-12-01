@@ -23,12 +23,6 @@ namespace Message.Controllers
         }
 
         // DTOs
-        public class CreateGroupDto
-        {
-            public string GroupName { get; set; }
-            public string Description { get; set; }
-        }
-
         public class CreateGroupWithFriendsDto
         {
             public string GroupName { get; set; }
@@ -73,40 +67,6 @@ namespace Message.Controllers
             {
                 return null;
             }
-        }
-
-        [HttpPost("create/{token}")]
-        public async Task<IActionResult> CreateGroup([FromBody] CreateGroupDto groupDto, string token)
-        {
-            var userId = await ValidateTokenAndGetUserId(token);
-            if (!userId.HasValue)
-                return Unauthorized("Invalid token");
-
-            if (await _context.Groups.AnyAsync(g => g.GroupName == groupDto.GroupName))
-                return BadRequest("Group name already exists");
-
-            var group = new Group
-            {
-                GroupName = groupDto.GroupName,
-                Description = groupDto.Description,
-                CreatedAt = DateTime.Now
-            };
-
-            _context.Groups.Add(group);
-            await _context.SaveChangesAsync();
-
-            var userGroup = new UserGroup
-            {
-                UserId = userId.Value,
-                GroupId = group.GroupId,
-                IsAdmin = true,
-                JoinedAt = DateTime.Now
-            };
-
-            _context.UserGroups.Add(userGroup);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { Message = "Group created successfully", GroupId = group.GroupId });
         }
 
         [HttpPost("createwithfriends/{token}")]
