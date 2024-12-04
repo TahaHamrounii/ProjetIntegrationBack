@@ -9,16 +9,28 @@ namespace Message.Models
         [Key]
         public int Id { get; set; }
         
+        [Required]
         public string UserId { get; set; } = string.Empty;
         
         public bool IsActive { get; set; } = true;
         
+        [Required]
+        [StringLength(20)]
         public string Theme { get; set; } = "light";
         
+        [Required]
+        [StringLength(10)]
         public string Language { get; set; } = "en";
+
+        [Required]
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        [Required]
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation property
         [JsonIgnore]
+        [ForeignKey("UserId")]
         public virtual User? User { get; set; }
     }
 }

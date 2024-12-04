@@ -493,3 +493,13 @@ c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\obj\Debug\net8.0
 c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\obj\Debug\net8.0\Message.dll
 c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\obj\Debug\net8.0\refint\Message.dll
 c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\obj\Debug\net8.0\Message.pdb
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\bin\Debug\net8.0\appsettings.Development.json
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\bin\Debug\net8.0\appsettings.json
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\bin\Debug\net8.0\Message.exe
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\bin\Debug\net8.0\Message.deps.json
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\bin\Debug\net8.0\Message.runtimeconfig.json
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\bin\Debug\net8.0\Message.dll
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\bin\Debug\net8.0\Message.pdb
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\obj\Debug\net8.0\Message.csproj.Up2Date
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\obj\Debug\net8.0\Message.genruntimeconfig.cache
+c:\Users\aziza\Desktop\projet integration\ProjetIntegrationBack\obj\Debug\net8.0\ref\Message.dll

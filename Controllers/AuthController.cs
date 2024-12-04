@@ -1,14 +1,14 @@
-﻿using Message.Models;
+using Message.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // Ensure this is included for EF Core methods
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using BCrypt.Net;
-using Message.Data; // Ensure you have this package installed for password hashing
+using Message.Data;
 
 namespace Message.Controllers
 {
@@ -16,63 +16,135 @@ namespace Message.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(AppDbContext context, IConfiguration configuration)
+        public AuthController(ApplicationDbContext context, IConfiguration configuration, ILogger<AuthController> logger)
         {
             _context = context;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] User user)
+        public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
         {
-            // Validate the incoming user data (e.g., check if the email is already taken)
-            if (await _context.Users.AnyAsync(u => u.Email == user.Email))
+            try
             {
-                return BadRequest("Email is already in use.");
-            }
+                if (await _context.Users.AnyAsync(u => u.Email == request.Email))
+                {
+                    return BadRequest(new { message = "Email is already in use." });
+                }
 
-            // Hash password before saving to the database
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password); // Hashing the password
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return Ok();
+                if (await _context.Users.AnyAsync(u => u.Username == request.Username))
+                {
+                    return BadRequest(new { message = "Username is already taken." });
+                }
+
+                var user = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Email = request.Email,
+                    Username = request.Username,
+                    Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                    Name = request.Name ?? request.Username,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                var token = GenerateJwtToken(user);
+                return Ok(new AuthResponse
+                {
+                    Token = token,
+                    UserId = user.Id,
+                    Username = user.Username
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during user registration");
+                return StatusCode(500, new { message = "An error occurred during registration." });
+            }
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Email);
-
-            // Verify the password (using hashed passwords)
-            if (existingUser == null || !BCrypt.Net.BCrypt.Verify(loginRequest.Password, existingUser.Password))
+            try
             {
-                return Unauthorized("Invalid email or password.");
-            }
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            // Generate JWT token
+                if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+                {
+                    return Unauthorized(new { message = "Invalid email or password." });
+                }
+
+                // Update last active time
+                user.LastActiveTime = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+
+                var token = GenerateJwtToken(user);
+                return Ok(new AuthResponse
+                {
+                    Token = token,
+                    UserId = user.Id,
+                    Username = user.Username
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during login");
+                return StatusCode(500, new { message = "An error occurred during login." });
+            }
+        }
+
+        private string GenerateJwtToken(User user)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenKey = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]); // Use the configured key
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured"));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                   
-                    new Claim(ClaimTypes.Name, existingUser.Username)
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim("userId", user.Id)
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return Ok(new { Token = tokenHandler.WriteToken(token) });
+            return tokenHandler.WriteToken(token);
         }
     }
+
     public class LoginRequest
     {
-        public string Email { get; set; } // Corresponds to the email
-        public string Password { get; set; } // Password field
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 
+    public class RegisterRequest
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string? Name { get; set; }
+    }
+
+    public class AuthResponse
+    {
+        public string Token { get; set; } = string.Empty;
+        public string UserId { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
+    }
 }

@@ -28,11 +28,25 @@ namespace Message.Data
                 
                 entity.HasOne(u => u.Settings)
                       .WithOne(s => s.User)
-                      .HasForeignKey<UserSettings>(s => s.UserId);
+                      .HasForeignKey<UserSettings>(s => s.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<UserSettings>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.UserId).IsUnique();
+                
+                entity.Property(e => e.Theme).HasMaxLength(20).IsRequired();
+                entity.Property(e => e.Language).HasMaxLength(10).IsRequired();
+                entity.Property(e => e.CreatedAt).IsRequired();
+                entity.Property(e => e.UpdatedAt).IsRequired();
             });
 
             // Seed test user
             var userId = "raed123";
+            var now = DateTime.UtcNow;
+            
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -42,9 +56,9 @@ namespace Message.Data
                     Password = BCrypt.Net.BCrypt.HashPassword("Password123!"),
                     Name = "Raed Test",
                     Avatar = "default-avatar.jpg",
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    LastActiveTime = DateTime.UtcNow
+                    CreatedAt = now,
+                    UpdatedAt = now,
+                    LastActiveTime = now
                 }
             );
 
@@ -55,7 +69,9 @@ namespace Message.Data
                     UserId = userId,
                     IsActive = true,
                     Theme = "dark",
-                    Language = "en"
+                    Language = "en",
+                    CreatedAt = now,
+                    UpdatedAt = now
                 }
             );
         }
@@ -66,6 +82,34 @@ namespace Message.Data
             {
                 optionsBuilder.UseSqlite("Data Source=ChatApp.db");
             }
+        }
+
+        public override int SaveChanges()
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is UserSettings && e.State == EntityState.Modified);
+
+            foreach (var entityEntry in entries)
+            {
+                ((UserSettings)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+            }
+
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is UserSettings && e.State == EntityState.Modified);
+
+            foreach (var entityEntry in entries)
+            {
+                ((UserSettings)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
