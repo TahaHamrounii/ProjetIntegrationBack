@@ -22,6 +22,12 @@ namespace Message.Models
         [StringLength(10)]
         public string Language { get; set; } = "en";
 
+        public bool NotifyMessages { get; set; } = true;
+        
+        public bool NotifyGroups { get; set; } = true;
+        
+        public bool NotifyCalls { get; set; } = true;
+
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

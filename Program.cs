@@ -54,7 +54,7 @@ builder.Services.AddAuthentication(options =>
         OnMessageReceived = context =>
         {
             // Allow JWT token to be passed in Authorization header or as a query parameter
-            var accessToken = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last() ??
+            var accessToken = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last() ?? 
                             context.Request.Query["access_token"].FirstOrDefault();
 
             if (!string.IsNullOrEmpty(accessToken))
@@ -118,11 +118,17 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
+    // Disable HTTPS redirection in development
+    // app.UseHttpsRedirection();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin"); // Enable CORS
 
 // Authentication & Authorization

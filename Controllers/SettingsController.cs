@@ -48,49 +48,68 @@ namespace Message.Controllers
         /// <response code="401">If the user is not authenticated</response>
         /// <response code="404">If settings are not found for the user</response>
         [HttpGet]
-        [ProducesResponseType(typeof(UserSettings), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserSettingsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UserSettings>> GetUserSettings()
+        public async Task<ActionResult<UserSettingsResponse>> GetUserSettings()
         {
             try
             {
                 var userId = GetCurrentUserId();
                 _logger.LogInformation($"Getting settings for user: {userId}");
 
-                // First try to get settings directly
+                // Get both user and settings
+                var user = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+
                 var settings = await _context.UserSettings
                     .AsNoTracking()
                     .FirstOrDefaultAsync(s => s.UserId == userId);
 
-                if (settings != null)
+                if (user == null)
                 {
-                    return Ok(settings);
+                    return NotFound($"User {userId} not found");
                 }
 
-                // If settings don't exist, create default settings
-                var newSettings = new UserSettings
+                if (settings == null)
                 {
+                    // Create default settings if none exist
+                    settings = new UserSettings
+                    {
+                        UserId = userId,
+                        IsActive = true,
+                        Theme = "light",
+                        Language = "en",
+                        NotifyMessages = true,
+                        NotifyGroups = true,
+                        NotifyCalls = true,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    };
+                    _context.UserSettings.Add(settings);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Combine user and settings data
+                var response = new UserSettingsResponse
+                {
+                    Id = settings.Id,
                     UserId = userId,
-                    IsActive = true,
-                    Theme = "light",
-                    Language = "en",
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    Email = user.Email,
+                    Name = user.Name,
+                    Username = user.Username,
+                    IsActive = settings.IsActive,
+                    Theme = settings.Theme,
+                    Language = settings.Language,
+                    NotifyMessages = settings.NotifyMessages,
+                    NotifyGroups = settings.NotifyGroups,
+                    NotifyCalls = settings.NotifyCalls,
+                    CreatedAt = settings.CreatedAt,
+                    UpdatedAt = settings.UpdatedAt
                 };
 
-                try
-                {
-                    _context.UserSettings.Add(newSettings);
-                    await _context.SaveChangesAsync();
-                    return Ok(newSettings);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Failed to create default settings for user {UserId}", userId);
-                    return StatusCode(500, new { message = "Failed to create default settings", error = ex.Message });
-                }
+                return Ok(response);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -113,7 +132,7 @@ namespace Message.Controllers
         /// <response code="401">If the user is not authenticated</response>
         /// <response code="404">If the user is not found</response>
         [HttpPut]
-        [ProducesResponseType(typeof(UserSettings), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserSettingsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUserSettings([FromBody] UpdateSettingsRequest request)
@@ -123,37 +142,51 @@ namespace Message.Controllers
                 var userId = GetCurrentUserId();
                 _logger.LogInformation($"Updating settings for user: {userId}");
 
-                var user = await _context.Users
-                    .Include(u => u.Settings)
-                    .FirstOrDefaultAsync(u => u.Id == userId);
+                var settings = await _context.UserSettings
+                    .FirstOrDefaultAsync(s => s.UserId == userId);
 
-                if (user == null)
+                if (settings == null)
                 {
-                    _logger.LogWarning($"User not found: {userId}");
-                    return NotFound($"User with ID {userId} not found");
-                }
-
-                if (user.Settings == null)
-                {
-                    user.Settings = new UserSettings
+                    settings = new UserSettings
                     {
                         UserId = userId,
                         IsActive = request.IsActive,
                         Theme = request.Theme,
-                        Language = request.Language
+                        Language = request.Language,
+                        NotifyMessages = request.NotifyMessages,
+                        NotifyGroups = request.NotifyGroups,
+                        NotifyCalls = request.NotifyCalls
                     };
-                    _context.UserSettings.Add(user.Settings);
+                    _context.UserSettings.Add(settings);
                 }
                 else
                 {
-                    user.Settings.IsActive = request.IsActive;
-                    user.Settings.Theme = request.Theme;
-                    user.Settings.Language = request.Language;
-                    _context.Entry(user.Settings).State = EntityState.Modified;
+                    settings.IsActive = request.IsActive;
+                    settings.Theme = request.Theme;
+                    settings.Language = request.Language;
+                    settings.NotifyMessages = request.NotifyMessages;
+                    settings.NotifyGroups = request.NotifyGroups;
+                    settings.NotifyCalls = request.NotifyCalls;
+                    settings.UpdatedAt = DateTime.UtcNow;
                 }
 
                 await _context.SaveChangesAsync();
-                return Ok(user.Settings);
+                
+                var response = new UserSettingsResponse
+                {
+                    Id = settings.Id,
+                    UserId = settings.UserId,
+                    IsActive = settings.IsActive,
+                    Theme = settings.Theme,
+                    Language = settings.Language,
+                    NotifyMessages = settings.NotifyMessages,
+                    NotifyGroups = settings.NotifyGroups,
+                    NotifyCalls = settings.NotifyCalls,
+                    CreatedAt = settings.CreatedAt,
+                    UpdatedAt = settings.UpdatedAt
+                };
+
+                return Ok(response);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -263,15 +296,42 @@ namespace Message.Controllers
         /// Whether the user is active
         /// </summary>
         public bool IsActive { get; set; }
-
         /// <summary>
         /// The user's preferred theme
         /// </summary>
-        public string Theme { get; set; } = "light";
-
+        public string Theme { get; set; } = string.Empty;
         /// <summary>
         /// The user's preferred language
         /// </summary>
-        public string Language { get; set; } = "en";
+        public string Language { get; set; } = string.Empty;
+        /// <summary>
+        /// Whether to notify the user of new messages
+        /// </summary>
+        public bool NotifyMessages { get; set; }
+        /// <summary>
+        /// Whether to notify the user of new groups
+        /// </summary>
+        public bool NotifyGroups { get; set; }
+        /// <summary>
+        /// Whether to notify the user of new calls
+        /// </summary>
+        public bool NotifyCalls { get; set; }
+    }
+
+    public class UserSettingsResponse
+    {
+        public int Id { get; set; }
+        public string UserId { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
+        public string Theme { get; set; } = string.Empty;
+        public string Language { get; set; } = string.Empty;
+        public bool NotifyMessages { get; set; }
+        public bool NotifyGroups { get; set; }
+        public bool NotifyCalls { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }
