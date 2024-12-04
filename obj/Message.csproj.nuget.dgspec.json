@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\Message.csproj": {}
+    "C:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\Message.csproj": {}
   },
   "projects": {
-    "c:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\Message.csproj": {
+    "C:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\Message.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\Message.csproj",
+        "projectUniqueName": "C:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\Message.csproj",
         "projectName": "Message",
-        "projectPath": "c:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\Message.csproj",
+        "projectPath": "C:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\Message.csproj",
         "packagesPath": "C:\\Users\\aziza\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\obj\\",
+        "outputPath": "C:\\Users\\aziza\\Desktop\\projet integration\\ProjetIntegrationBack\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\aziza\\AppData\\Roaming\\NuGet\\NuGet.Config",
