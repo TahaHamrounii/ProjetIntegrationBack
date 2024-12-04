@@ -18,11 +18,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
-        builder => builder.WithOrigins("http://localhost:5173") // Allow Vue.js app origin
-                          .AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .AllowCredentials()); // This allows cookies and credentials
+    options.AddPolicy("AllowAll",
+        builder => builder
+            .AllowAnyOrigin() // Allows requests from any origin
+            .AllowAnyHeader() // Allows any headers
+            .AllowAnyMethod()); // Allows any HTTP methods
 });
 
 // Authentication setup
@@ -57,7 +57,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowSpecificOrigin"); // Enable CORS
+app.UseCors("AllowAll"); // Enable CORS
 app.UseAuthentication(); // Ensure authentication middleware is in place
 app.UseAuthorization();
 

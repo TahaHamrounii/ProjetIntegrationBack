@@ -7,7 +7,7 @@ using System.Text.Json;
 using Message.Data; // Your DbContext namespace
 using Message.Models; // Your models namespace
 using System.Collections.Concurrent;
-
+using Microsoft.Extensions.Logging;
 namespace Message.Controllers
 {
     [ApiController]
@@ -19,7 +19,10 @@ namespace Message.Controllers
 
         public MessageController(AppDbContext context)
         {
+
             _context = context;
+
+
         }
 
         [HttpGet("connect/{userId}")]
@@ -27,57 +30,29 @@ namespace Message.Controllers
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
+
                 var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 ConnectedUsers[userId] = webSocket;
+                var message = "You're Connected!";
+                var bytes = Encoding.UTF8.GetBytes(message);
+                var arraySegment = new ArraySegment<byte>(bytes, 0, bytes.Length);
+                while (webSocket.State == WebSocketState.Open)
+                {
+                    await webSocket.SendAsync(arraySegment, WebSocketMessageType.Text, true, CancellationToken.None);
 
-                await HandleWebSocketCommunication(userId, webSocket);
-            }
-            else
-            {
-                HttpContext.Response.StatusCode = 400; // Bad Request
+                    await Task.Delay(TimeSpan.FromSeconds(30)); // Ping every 30 seconds
+                    await webSocket.SendAsync(Encoding.UTF8.GetBytes("Ping"), WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+
+
             }
         }
 
-        private async Task HandleWebSocketCommunication(int userId, WebSocket webSocket)
-        {
-            var buffer = new byte[1024 * 4];
-
-            while (webSocket.State == WebSocketState.Open)
-            {
-                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-                if (result.MessageType == WebSocketMessageType.Text)
-                {
-                    var messageJson = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    var chatMessage = JsonSerializer.Deserialize<ChatMessage>(messageJson);
-
-                    if (chatMessage != null)
-                    {
-                        // Save to database
-                        await SaveMessageToDatabase(chatMessage);
-
-                        // Forward the message to the recipient if connected
-                        if (ConnectedUsers.TryGetValue(chatMessage.ReceiverId, out var recipientSocket) && recipientSocket.State == WebSocketState.Open)
-                        {
-                            await recipientSocket.SendAsync(
-                                new ArraySegment<byte>(Encoding.UTF8.GetBytes(messageJson)),
-                                WebSocketMessageType.Text,
-                                true,
-                                CancellationToken.None
-                            );
-                        }
-                    }
-                }
-                else if (result.MessageType == WebSocketMessageType.Close)
-                {
-                    ConnectedUsers.TryRemove(userId, out _);
-                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closed by user", CancellationToken.None);
-                }
-            }
-        }
 
         private async Task SaveMessageToDatabase(ChatMessage chatMessage)
         {
+
+            chatMessage.Timestamp = DateTime.UtcNow;
             var message = new Messages
             {
                 SenderId = chatMessage.SenderId,
@@ -102,6 +77,17 @@ namespace Message.Controllers
             return Ok(messages);
         }
 
+
+        [HttpGet("history/all")]
+        public async Task<IActionResult> GetALLMessageHistory()
+        {
+            var messages = await _context.Messages
+            .OrderBy(m => m.Timestamp)
+            .ToListAsync();
+
+            return Ok(messages);
+        }
+
         [HttpPost("send")]
         public async Task<IActionResult> SendMessage([FromBody] ChatMessage chatMessage)
         {
@@ -113,17 +99,16 @@ namespace Message.Controllers
             // Save message to the database
             await SaveMessageToDatabase(chatMessage);
 
-            // Forward the message to the recipient if connected
-            if (ConnectedUsers.TryGetValue(chatMessage.ReceiverId, out var recipientSocket) && recipientSocket.State == WebSocketState.Open)
-            {
+                System.Diagnostics.Debug.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" + chatMessage);
+                var receiverSocket = ConnectedUsers[chatMessage.ReceiverId];
                 var messageJson = JsonSerializer.Serialize(chatMessage);
-                await recipientSocket.SendAsync(
-                    new ArraySegment<byte>(Encoding.UTF8.GetBytes(messageJson)),
-                    WebSocketMessageType.Text,
-                    true,
-                    CancellationToken.None
-                );
-            }
+            var arraySegment = new ArraySegment<byte>(Encoding.UTF8.GetBytes(messageJson));
+
+                if (receiverSocket.State == WebSocketState.Open)
+                {
+                    await receiverSocket.SendAsync(arraySegment, WebSocketMessageType.Text, true, CancellationToken.None);
+                }
+            
 
             // Respond with success
             return Ok(new { Status = "Message sent successfully" });

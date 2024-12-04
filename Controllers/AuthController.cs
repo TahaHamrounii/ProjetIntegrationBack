@@ -58,6 +58,8 @@ namespace Message.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
+            Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Mail);
 
             // Verify the password (using hashed passwords)
@@ -82,18 +84,8 @@ namespace Message.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return Ok(new { Token = tokenHandler.WriteToken(token),
-
-
-             UserId = existingUser.Id
-
+             UserId = existingUser.Id,
             });
-        }
-
-        [HttpGet("users")]
-        public async Task<IActionResult> GetUsers()
-        {
-            var users = await _context.Users.ToListAsync();
-            return Ok(users);
         }
     }
 

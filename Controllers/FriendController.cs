@@ -20,7 +20,7 @@ namespace Message.Controllers
             _context = context;
             _friendService = friendService;
         }
-
+        
         [HttpPost("add")]
         public async Task<IActionResult> AddFriend([FromBody] AddFriendRequest request)
         {
@@ -56,9 +56,20 @@ namespace Message.Controllers
                 FriendId = request.FriendId,
                 CreatedAt = DateTime.UtcNow
             };
-
             _context.Friends.Add(friendship);
             await _context.SaveChangesAsync();
+
+
+            // Add friendship
+            friendship = new Friend
+            {
+                UserId = request.FriendId,
+                FriendId = request.UserId,
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Friends.Add(friendship);
+            await _context.SaveChangesAsync();
+
 
             return Ok(new { message = "Friend added successfully!" });
         }
@@ -86,7 +97,28 @@ namespace Message.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        // DELETE: api/Friend/{userId}/{friendId}
+        [HttpDelete("{userId}/{friendId}")]
+        public IActionResult DeleteFriendship(int userId, int friendId)
+        {
+            // Check if the friendship exists
+            var friendship = _context.Friends
+                .FirstOrDefault(f => (f.UserId == userId && f.FriendId == friendId) ||
+                                     (f.UserId == friendId && f.FriendId == userId));
+
+            if (friendship == null)
+            {
+                return NotFound(new { message = "Friendship not found." });
+            }
+
+            // Remove the friendship
+            _context.Friends.Remove(friendship);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
     }
+
 
     public class AddFriendRequest
     {
