@@ -99,7 +99,6 @@ namespace Message.Controllers
             // Save message to the database
             await SaveMessageToDatabase(chatMessage);
 
-                System.Diagnostics.Debug.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" + chatMessage);
                 var receiverSocket = ConnectedUsers[chatMessage.ReceiverId];
                 var messageJson = JsonSerializer.Serialize(chatMessage);
             var arraySegment = new ArraySegment<byte>(Encoding.UTF8.GetBytes(messageJson));

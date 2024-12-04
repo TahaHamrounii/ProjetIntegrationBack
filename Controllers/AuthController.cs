@@ -8,7 +8,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using BCrypt.Net;
-using Message.Data; // Ensure you have this package installed for password hashing
+using Message.Data;
+using Message.Services; // Ensure you have this package installed for password hashing
 
 namespace Message.Controllers
 { 
@@ -48,6 +49,11 @@ namespace Message.Controllers
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password); // Hashing the password
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
+
+            var subject = "Welcome to ISET TALK";
+            var content = "Your account was successfuly created, however you will have to wait until one of our admins accepts it";
+            EmailService.sendEmail(user, subject, content);
             return Ok(new
             {
                 message = "Account is suspended and will be activated soon.",
@@ -58,8 +64,6 @@ namespace Message.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-
             var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Mail);
 
             // Verify the password (using hashed passwords)
@@ -85,6 +89,8 @@ namespace Message.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return Ok(new { Token = tokenHandler.WriteToken(token),
              UserId = existingUser.Id,
+             Role = existingUser.Role,
+             Status = existingUser.Status
             });
         }
     }

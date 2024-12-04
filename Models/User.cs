@@ -9,6 +9,7 @@
         public DateTime ApplicationDate { get; set; }
         public  string University { get; set; }
         public string Status { get; set; } = "Suspendu";
+        public string Role { get; set; } 
     }
 
 }

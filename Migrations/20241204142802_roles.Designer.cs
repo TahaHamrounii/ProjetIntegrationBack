@@ -11,14 +11,34 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Message.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241125141342_AddMessagesTable")]
-    partial class AddMessagesTable
+    [Migration("20241204142802_roles")]
+    partial class roles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+
+            modelBuilder.Entity("Message.Models.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FriendId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Friends");
+                });
 
             modelBuilder.Entity("Message.Models.Messages", b =>
                 {
@@ -58,6 +78,10 @@ namespace Message.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
